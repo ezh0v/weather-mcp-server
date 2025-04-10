@@ -1,8 +1,12 @@
 package server
 
 import (
+	"context"
 	"embed"
 	"html/template"
+	"log"
+	"os/signal"
+	"syscall"
 
 	"github.com/mark3labs/mcp-go/server"
 
@@ -30,13 +34,34 @@ func Run(cfg *Config) error {
 		server.WithLogging(),
 	)
 
-	serverTools := []tools.ToolFunc{
+	toolFuncs := []tools.ToolFunc{
 		tools.CurrentWeather,
 	}
 
-	for _, tool := range serverTools {
+	for _, tool := range toolFuncs {
 		s.AddTool(tool(svc))
 	}
 
+	if cfg.ListenAddr != "" {
+		return serveSSE(s, cfg.ListenAddr)
+	}
+
 	return server.ServeStdio(s)
+}
+
+func serveSSE(s *server.MCPServer, addr string) error {
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
+
+	srv := server.NewSSEServer(s)
+
+	go func() {
+		if err := srv.Start(addr); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	<-ctx.Done()
+
+	return srv.Shutdown(context.TODO())
 }

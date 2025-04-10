@@ -6,6 +6,7 @@ import (
 )
 
 type Config struct {
+	ListenAddr        string
 	WeatherAPIKey     string
 	WeatherAPITimeout time.Duration
 }

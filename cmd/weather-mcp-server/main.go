@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"time"
@@ -9,7 +10,11 @@ import (
 )
 
 func main() {
-	cfg := server.Config{
+	addr := flag.String("address", "", "The host and port to start the sse server")
+	flag.Parse()
+
+	cfg := &server.Config{
+		ListenAddr:        *addr,
 		WeatherAPIKey:     os.Getenv("WEATHER_API_KEY"),
 		WeatherAPITimeout: 1 * time.Second,
 	}
@@ -18,7 +23,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := server.Run(&cfg); err != nil {
+	if err := server.Run(cfg); err != nil {
 		log.Fatal(err)
 	}
 }
