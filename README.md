@@ -3,10 +3,10 @@
 
 <h1>Weather API MCP Server</h1>
 
-[![license](https://img.shields.io/badge/license-MIT-red.svg)](LICENSE)
-[![go version](https://img.shields.io/github/go-mod/go-version/TuanKiri/weather-mcp-server)](go.mod)
-[![go report](https://goreportcard.com/badge/github.com/TuanKiri/weather-mcp-server)](https://goreportcard.com/report/github.com/TuanKiri/weather-mcp-server)
-[![build](https://github.com/TuanKiri/weather-mcp-server/workflows/Build/badge.svg)](https://github.com/TuanKiri/weather-mcp-server/actions?workflow=Build)
+[![License](https://img.shields.io/badge/license-MIT-red.svg)](LICENSE)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/TuanKiri/weather-mcp-server)](go.mod)
+[![Go Report Card](https://goreportcard.com/badge/github.com/TuanKiri/weather-mcp-server?cache)](https://goreportcard.com/report/github.com/TuanKiri/weather-mcp-server)
+[![Build](https://github.com/TuanKiri/weather-mcp-server/workflows/Build/badge.svg)](https://github.com/TuanKiri/weather-mcp-server/actions?workflow=Build)
 
 <strong>[Report Bug](https://github.com/TuanKiri/weather-mcp-server/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml)</strong> | <strong>[Request Feature](https://github.com/TuanKiri/weather-mcp-server/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.yml)</strong>
 
