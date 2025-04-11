@@ -15,13 +15,15 @@ import (
 const baseURL = "http://api.weatherapi.com"
 
 type WeatherAPI struct {
-	key    string
-	client *http.Client
+	key     string
+	baseURL string
+	client  *http.Client
 }
 
 func New(key string, timeout time.Duration) *WeatherAPI {
 	return &WeatherAPI{
-		key: key,
+		key:     key,
+		baseURL: baseURL,
 		client: &http.Client{
 			Timeout: timeout,
 		},
@@ -36,7 +38,7 @@ func (w *WeatherAPI) Current(ctx context.Context, city string) (*models.CurrentR
 
 	request, err := http.NewRequestWithContext(ctx,
 		http.MethodGet,
-		baseURL+"/v1/current.json?"+query.Encode(),
+		w.baseURL+"/v1/current.json?"+query.Encode(),
 		nil,
 	)
 	if err != nil {
