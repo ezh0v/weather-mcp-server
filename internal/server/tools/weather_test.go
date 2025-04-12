@@ -2,13 +2,15 @@ package tools
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
-	"github.com/TuanKiri/weather-mcp-server/internal/server/services/mock"
+	mocks "github.com/TuanKiri/weather-mcp-server/internal/server/services/mock"
 )
 
 func TestCurrentWeather(t *testing.T) {
@@ -30,10 +32,22 @@ func TestCurrentWeather(t *testing.T) {
 			arguments: map[string]any{
 				"city": "London",
 			},
+			wait: "<h1>London weather data</h1>",
 		},
 	}
 
-	svc := mock.New()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mocksWeather := mocks.NewMockWeatherService(ctrl)
+	mocksWeather.EXPECT().
+		Current(context.Background(), "Tokyo").
+		Return("", errors.New("weather API not available. Code: 400"))
+	mocksWeather.EXPECT().
+		Current(context.Background(), "London").
+		Return("<h1>London weather data</h1>", nil)
+	svc := mocks.NewMockServices(ctrl)
+	svc.EXPECT().Weather().Return(mocksWeather).Times(2)
 
 	tool, handler := CurrentWeather(svc)
 
