@@ -14,12 +14,14 @@ import (
 )
 
 func TestCurrentWeather(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]struct {
 		city      string
 		errString string
 		wait      *models.CurrentResponse
 	}{
-		"success_request": {
+		"successful_request": {
 			city: "London",
 			wait: &models.CurrentResponse{
 				Location: models.Location{
