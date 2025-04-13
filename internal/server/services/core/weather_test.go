@@ -11,7 +11,6 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/TuanKiri/weather-mcp-server/internal/server/services/mock"
-	viewModels "github.com/TuanKiri/weather-mcp-server/internal/server/view/models"
 	"github.com/TuanKiri/weather-mcp-server/pkg/weatherapi/models"
 )
 
@@ -61,8 +60,8 @@ func TestCurrentWeather(t *testing.T) {
 			},
 			setupRenderer: func(renderer *mock.MockTemplateRenderer) {
 				renderer.EXPECT().
-					ExecuteTemplate(gomock.Any(), "weather.html", gomock.AssignableToTypeOf(viewModels.CurrentWeather{})).
-					Do(func(wr io.Writer, _ string, data viewModels.CurrentWeather) {
+					ExecuteTemplate(gomock.Any(), "weather.html", gomock.Any()).
+					Do(func(wr io.Writer, _ string, data any) {
 						if wr != nil {
 							wr.Write(fmt.Appendf([]byte{}, "%+v", data))
 						}
