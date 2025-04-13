@@ -15,20 +15,31 @@ import (
 
 func TestCurrentWeather(t *testing.T) {
 	testCases := map[string]struct {
-		arguments map[string]any
-		errString string
-		wait      string
+		fillWeatherService func(mocksWeather *mocks.MockWeatherService)
+		arguments          map[string]any
+		errString          string
+		wait               string
 	}{
 		"empty_city": {
 			wait: "city must be a string",
 		},
 		"city_not_found": {
+			fillWeatherService: func(mocksWeather *mocks.MockWeatherService) {
+				mocksWeather.EXPECT().
+					Current(context.Background(), "Tokyo").
+					Return("", errors.New("weather API not available. Code: 400"))
+			},
 			arguments: map[string]any{
 				"city": "Tokyo",
 			},
 			errString: "weather API not available. Code: 400",
 		},
 		"successful_request": {
+			fillWeatherService: func(mocksWeather *mocks.MockWeatherService) {
+				mocksWeather.EXPECT().
+					Current(context.Background(), "London").
+					Return("<h1>London weather data</h1>", nil)
+			},
 			arguments: map[string]any{
 				"city": "London",
 			},
@@ -40,30 +51,20 @@ func TestCurrentWeather(t *testing.T) {
 	defer ctrl.Finish()
 
 	mocksWeather := mocks.NewMockWeatherService(ctrl)
-	mocksWeather.EXPECT().
-		Current(context.Background(), "Tokyo").
-		Return("", errors.New("weather API not available. Code: 400"))
-	mocksWeather.EXPECT().
-		Current(context.Background(), "London").
-		Return("<h1>London weather data</h1>", nil)
+
 	svc := mocks.NewMockServices(ctrl)
-	svc.EXPECT().Weather().Return(mocksWeather).Times(2)
+	svc.EXPECT().Weather().Return(mocksWeather).AnyTimes()
 
 	handler := CurrentWeather(svc)
 
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
-			request := mcp.CallToolRequest{
-				Params: struct {
-					Name      string         `json:"name"`
-					Arguments map[string]any `json:"arguments,omitempty"`
-					Meta      *struct {
-						ProgressToken mcp.ProgressToken `json:"progressToken,omitempty"`
-					} `json:"_meta,omitempty"`
-				}{
-					Arguments: tc.arguments,
-				},
+			if tc.fillWeatherService != nil {
+				tc.fillWeatherService(mocksWeather)
 			}
+
+			var request mcp.CallToolRequest
+			request.Params.Arguments = tc.arguments
 
 			result, err := handler(context.Background(), request)
 			if err != nil {

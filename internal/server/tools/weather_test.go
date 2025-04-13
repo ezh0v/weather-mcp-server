@@ -4,17 +4,10 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
-
-	mocks "github.com/TuanKiri/weather-mcp-server/internal/server/services/mock"
 )
 
 func TestCurrentWeather(t *testing.T) {
-	ctrl := gomock.NewController(t)
-
-	svc := mocks.NewMockServices(ctrl)
-
-	tool, handler := CurrentWeather(svc)
+	tool, handler := CurrentWeather(nil)
 
 	assert.Equal(t, "current_weather", tool.Name)
 	assert.NotEmpty(t, tool.Description)
