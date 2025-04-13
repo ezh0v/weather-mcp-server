@@ -5,7 +5,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -62,15 +61,11 @@ func TestCurrentWeather(t *testing.T) {
 			},
 			setupRenderer: func(renderer *mock.MockTemplateRenderer) {
 				renderer.EXPECT().
-					ExecuteTemplate(
-						gomock.AssignableToTypeOf(&bytes.Buffer{}),
-						"weather.html",
-						gomock.AssignableToTypeOf(viewModels.CurrentWeather{}),
-					).
-					Do(func(wr io.Writer, _ string, data any) error {
-						value, _ := data.(viewModels.CurrentWeather)
-						wr.Write(fmt.Appendf([]byte{}, "%+v", value))
-						return nil
+					ExecuteTemplate(gomock.Any(), "weather.html", gomock.AssignableToTypeOf(viewModels.CurrentWeather{})).
+					Do(func(wr *bytes.Buffer, _ string, data viewModels.CurrentWeather) {
+						if wr != nil {
+							wr.Write(fmt.Appendf([]byte{}, "%+v", data))
+						}
 					})
 			},
 		},
