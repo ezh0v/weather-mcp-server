@@ -30,7 +30,6 @@ To use your MCP server with Claude Desktop, add it to your Claude configuration:
   "mcpServers": {
     "weather-mcp-server": {
       "command": "/path/to/weather-mcp-server",
-      "args": [],
       "env": {
         "WEATHER_API_KEY": "your-api-key"
       }
@@ -63,7 +62,7 @@ go build -o weather-mcp-server ./cmd/weather-mcp-server
 
 ## Using MCP with Docker Containers
 
-#### 1. Build the Docker image:
+#### 1. Build the Docker Image:
 
 ```shell
 docker build -t weather-mcp-server .
