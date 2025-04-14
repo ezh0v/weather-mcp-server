@@ -100,6 +100,30 @@ The project is organized into several key directories:
 └── pkg
 ```
 
+## Testing
+
+If you're adding new features, please make sure to include tests for them.
+
+#### 1. Install the mockgen tool:
+
+```shell
+go install go.uber.org/mock/mockgen@latest
+```
+
+See the installation guide on [go.uber.org/mock](https://github.com/uber-go/mock?tab=readme-ov-file#installation).
+
+#### 2. Use the following command to generate mock files:
+
+```shell
+make generate-mocks
+```
+
+#### 3. To run unit tests:
+
+```shell
+make run-tests
+```
+
 ## Contributing
 
 Feel free to open tickets or send pull requests with improvements. Thanks in advance for your help!
