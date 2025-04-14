@@ -21,7 +21,6 @@ func (ws *WeatherService) Current(ctx context.Context, city string) (string, err
 	current.FromWeatherAPI(data)
 
 	var buf bytes.Buffer
-
 	if err := ws.renderer.ExecuteTemplate(&buf, "weather.html", current); err != nil {
 		return "", err
 	}

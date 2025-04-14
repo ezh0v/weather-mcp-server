@@ -16,5 +16,14 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
+      - name: Install mockgen
+        run: |
+          go install go.uber.org/mock/mockgen@latest
+
+      - name: Generate mocks
+        run: |
+          mockgen -source=./internal/server/services/services.go \
+          -destination=internal/server/services/mock/mock.go -package=mock
+
       - name: Run tests
         run: go test -v -race ./...
