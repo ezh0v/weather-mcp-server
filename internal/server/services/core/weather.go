@@ -3,8 +3,7 @@ package core
 import (
 	"bytes"
 	"context"
-
-	"github.com/TuanKiri/weather-mcp-server/internal/server/view/models"
+	"fmt"
 )
 
 type WeatherService struct {
@@ -17,11 +16,16 @@ func (ws *WeatherService) Current(ctx context.Context, city string) (string, err
 		return "", err
 	}
 
-	var current models.CurrentWeather
-	current.FromWeatherAPI(data)
-
 	var buf bytes.Buffer
-	if err := ws.renderer.ExecuteTemplate(&buf, "weather.html", current); err != nil {
+
+	if err := ws.renderer.ExecuteTemplate(&buf, "weather.html", map[string]string{
+		"Location":    fmt.Sprintf("%s, %s", data.Location.Name, data.Location.Country),
+		"Icon":        "https:" + data.Current.Condition.Icon,
+		"Condition":   data.Current.Condition.Text,
+		"Temperature": fmt.Sprintf("%.0f", data.Current.TempC),
+		"Humidity":    fmt.Sprintf("%d", data.Current.Humidity),
+		"WindSpeed":   fmt.Sprintf("%.0f", data.Current.WindKph),
+	}); err != nil {
 		return "", err
 	}
 

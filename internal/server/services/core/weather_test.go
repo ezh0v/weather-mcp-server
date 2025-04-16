@@ -3,11 +3,11 @@ package core
 import (
 	"context"
 	"errors"
-	"fmt"
-	"io"
+	"html/template"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
 	"github.com/TuanKiri/weather-mcp-server/internal/server/services/mock"
@@ -20,7 +20,6 @@ func TestCurrentWeather(t *testing.T) {
 		errString       string
 		wait            string
 		setupWeatherAPI func(weatherAPI *mock.MockWeatherAPIProvider)
-		setupRenderer   func(renderer *mock.MockTemplateRenderer)
 	}{
 		"city_not_found": {
 			city:      "Tokyo",
@@ -33,12 +32,8 @@ func TestCurrentWeather(t *testing.T) {
 		},
 		"successful_result": {
 			city: "London",
-			wait: "{Location:London, United Kingdom " +
-				"Icon:https://cdn.weatherapi.com/weather/64x64/day/113.png " +
-				"Condition:Sunny " +
-				"Temperature:18 " +
-				"Humidity:45 " +
-				"WindSpeed:4}",
+			wait: "London, United Kingdom Sunny 18 45 4 " +
+				"https://cdn.weatherapi.com/weather/64x64/day/113.png",
 			setupWeatherAPI: func(weatherAPI *mock.MockWeatherAPIProvider) {
 				weatherAPI.EXPECT().
 					Current(context.Background(), "London").
@@ -49,7 +44,7 @@ func TestCurrentWeather(t *testing.T) {
 						},
 						Current: models.Current{
 							TempC:    18.4,
-							WindKph:  4,
+							WindKph:  4.2,
 							Humidity: 45,
 							Condition: models.Condition{
 								Text: "Sunny",
@@ -58,22 +53,17 @@ func TestCurrentWeather(t *testing.T) {
 						},
 					}, nil)
 			},
-			setupRenderer: func(renderer *mock.MockTemplateRenderer) {
-				renderer.EXPECT().
-					ExecuteTemplate(gomock.Any(), "weather.html", gomock.Any()).
-					Do(func(wr io.Writer, _ string, data any) {
-						if wr != nil {
-							wr.Write(fmt.Appendf([]byte{}, "%+v", data))
-						}
-					})
-			},
 		},
 	}
+
+	renderer, err := template.New("weather.html").Parse(
+		"{{ .Location }} {{ .Condition }} {{ .Temperature }} " +
+			"{{ .Humidity }} {{ .WindSpeed }} {{ .Icon }}")
+	require.NoError(t, err)
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	renderer := mock.NewMockTemplateRenderer(ctrl)
 	weatherAPI := mock.NewMockWeatherAPIProvider(ctrl)
 
 	svc := New(renderer, weatherAPI)
@@ -82,10 +72,6 @@ func TestCurrentWeather(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			if tc.setupWeatherAPI != nil {
 				tc.setupWeatherAPI(weatherAPI)
-			}
-
-			if tc.setupRenderer != nil {
-				tc.setupRenderer(renderer)
 			}
 
 			data, err := svc.Weather().Current(context.Background(), tc.city)

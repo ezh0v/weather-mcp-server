@@ -1,15 +1,19 @@
 package core
 
-import "github.com/TuanKiri/weather-mcp-server/internal/server/services"
+import (
+	"html/template"
+
+	"github.com/TuanKiri/weather-mcp-server/internal/server/services"
+)
 
 type CoreServices struct {
-	renderer   services.TemplateRenderer
+	renderer   *template.Template
 	weatherAPI services.WeatherAPIProvider
 
 	weatherService *WeatherService
 }
 
-func New(renderer services.TemplateRenderer, weatherAPI services.WeatherAPIProvider) *CoreServices {
+func New(renderer *template.Template, weatherAPI services.WeatherAPIProvider) *CoreServices {
 	return &CoreServices{
 		renderer:   renderer,
 		weatherAPI: weatherAPI,
