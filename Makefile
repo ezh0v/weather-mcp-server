@@ -6,8 +6,7 @@ help:
 
 ##@ Tests
 generate-mocks: ## generate mock files using mockgen
-	mockgen -source=./internal/server/services/services.go \
-		-destination=internal/server/services/mock/mock.go -package=mock
+	go generate ./internal/server/services
 
 run-tests: ## run unit tests
 	go test -v -race ./...

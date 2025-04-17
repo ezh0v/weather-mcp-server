@@ -1,14 +1,8 @@
 package services
 
-import (
-	"context"
+import "context"
 
-	"github.com/TuanKiri/weather-mcp-server/pkg/weatherapi/models"
-)
-
-type WeatherAPIProvider interface {
-	Current(ctx context.Context, city string) (*models.CurrentResponse, error)
-}
+//go:generate mockgen --source services.go --destination mock/mock.go --package mock
 
 type Services interface {
 	Weather() WeatherService
