@@ -4,8 +4,8 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
-	"github.com/TuanKiri/weather-mcp-server/internal/server/handlers"
-	"github.com/TuanKiri/weather-mcp-server/internal/server/services"
+	"github.com/ezh0v/weather-mcp-server/internal/server/handlers"
+	"github.com/ezh0v/weather-mcp-server/internal/server/services"
 )
 
 func CurrentWeather(svc services.Services) (mcp.Tool, server.ToolHandlerFunc) {

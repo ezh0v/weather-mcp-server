@@ -10,7 +10,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/TuanKiri/weather-mcp-server/pkg/weatherapi/models"
+	"github.com/ezh0v/weather-mcp-server/pkg/weatherapi/models"
 )
 
 func TestCurrentWeather(t *testing.T) {

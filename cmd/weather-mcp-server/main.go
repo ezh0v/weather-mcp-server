@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/TuanKiri/weather-mcp-server/internal/server"
+	"github.com/ezh0v/weather-mcp-server/internal/server"
 )
 
 func main() {

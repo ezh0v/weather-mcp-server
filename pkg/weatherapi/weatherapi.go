@@ -9,7 +9,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/TuanKiri/weather-mcp-server/pkg/weatherapi/models"
+	"github.com/ezh0v/weather-mcp-server/pkg/weatherapi/models"
 )
 
 const baseURL = "http://api.weatherapi.com"

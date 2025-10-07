@@ -10,9 +10,9 @@ import (
 
 	"github.com/mark3labs/mcp-go/server"
 
-	"github.com/TuanKiri/weather-mcp-server/internal/server/services/core"
-	"github.com/TuanKiri/weather-mcp-server/internal/server/tools"
-	"github.com/TuanKiri/weather-mcp-server/pkg/weatherapi"
+	"github.com/ezh0v/weather-mcp-server/internal/server/services/core"
+	"github.com/ezh0v/weather-mcp-server/internal/server/tools"
+	"github.com/ezh0v/weather-mcp-server/pkg/weatherapi"
 )
 
 //go:embed view

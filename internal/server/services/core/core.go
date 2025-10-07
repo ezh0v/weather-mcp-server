@@ -3,7 +3,7 @@ package core
 import (
 	"html/template"
 
-	"github.com/TuanKiri/weather-mcp-server/internal/server/services"
+	"github.com/ezh0v/weather-mcp-server/internal/server/services"
 )
 
 type CoreServices struct {

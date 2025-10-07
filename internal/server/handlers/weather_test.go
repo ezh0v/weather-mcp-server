@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	"github.com/TuanKiri/weather-mcp-server/internal/server/services/mock"
+	"github.com/ezh0v/weather-mcp-server/internal/server/services/mock"
 )
 
 func TestCurrentWeather(t *testing.T) {
